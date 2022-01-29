@@ -32,12 +32,45 @@
             auth: {},
           };
         }
-        login(credentials) {
-          console.log(credentials.password);
+        logout = () => {
+          window.localStorage.removeItem("token");
+          this.setState({ auth: {} });
+        };
+        async componentDidMount() {
+          //when a compone
+          const token = window.localStorage.getItem("token");
+          if (token) {
+            const user = (
+              await axios.get("/api/auth", {
+                headers: {
+                  authorization: token,
+                },
+              })
+            ).data;
+            this.setState({ auth: user });
+          }
         }
+        login = async (credentials) => {
+          //send credential on right side of equal sign 
+          //get token back if all goes well 
+          const { token } = (await axios.post("/api/auth", credentials)).data;
+          //To store token so it remains after refreshing the page
+          window.localStorage.setItem("token", token);
+          //An alternative location is a cookie
+          //I want the auth value of token
+          const user = (
+            await axios.get("/api/auth", {
+              headers: {
+                authorization: token,
+              },
+            })
+          ).data;
+          //if successful, we change the state
+          this.setState({ auth: user });
+        };
         render() {
           const { auth } = this.state;
-          const { login } = this;
+          const { login, logout } = this;
           if (!auth.id) {
             return (
               <div>
@@ -54,6 +87,12 @@
               </div>
             );
           }
+          return (
+            <div>
+              Welcome {auth.username}!
+              <button onClick={logout}>Logout {auth.username}</button>
+            </div>
+          );
         }
       }
       ReactDOM.render(<App />, document.querySelector("#root"));
