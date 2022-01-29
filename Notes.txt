@@ -1,0 +1,28 @@
+
+Authentication within the context of a SPA/React 
+
+Several routes: 
+1. post to a route: 
+1A. Creating a token 
+1B. Send credentials as a payload 
+1C. Receive a token 
+
+Token: 
+1. Identifies a user 
+2. Has a payload 
+3. Encrypted version of payload 
+
+Request with token: 
+2. Sending it as a header (axios, fetch) which gives us back a user. 
+
+jsonwebtoken - library: 
+1.Creates a token
+2.When you end up signing with JWT, you need to sign with a key. We need a private key. 
+3. SShould not put anything secretive in a token. Whatever your payload was, it is not encrypted, it encodes it. 
+4. If you just have a token, you can use it, but you can't change the token because you don't have the key. 
+
+Storing passwords: 
+avoid storing passwords in plaintext 
+
+bcrypt: encrypt text compared with plain text 
+1. bcrypt hashes password and uses salt rounds 
